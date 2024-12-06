@@ -4,16 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - To-Do List</title>
-    <link rel="stylesheet" href="../static/login_stykes.css">
+    <link rel="stylesheet" href="../static/login_styles.css">
 </head>
 <body>
     <header>
         <h1>To-Do List</h1>
-        <nav>
-            <ul>
-                <li><a ></a></li>
-            </ul>
-        </nav>
     </header>
     <main>
         <section class="login-form">
@@ -30,6 +25,9 @@
             <p class="register-link">
                 Don't have an account? <a href="{{ url_for('user.add_user') }}" class="register-button">Register here</a>
             </p>
+            <hr>
+            <!-- Botón para iniciar sesión con Auth0 -->
+            <a href="{{ url_for('user.login') }}" class="auth0-button">Login with Auth0</a>
         </section>
     </main>
 </body>
