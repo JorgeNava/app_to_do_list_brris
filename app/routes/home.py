@@ -3,7 +3,7 @@ from database.database_manager import database_manager
 
 home_bp = Blueprint('home', __name__)
 
-@home_bp.route('/')
+@home_bp.route('/home')
 def home():
     tasks_collection = database_manager.get_db()['tasks']
     tasks = list(tasks_collection.find())

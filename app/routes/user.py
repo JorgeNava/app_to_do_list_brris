@@ -24,7 +24,7 @@ def add_user():
 
     return render_template('register.html')
 
-@user_bp.route('/login', methods=['GET', 'POST'])
+@user_bp.route('/', methods=['GET', 'POST'])
 def get_user():
     if request.method == 'POST':
         email = request.form.get('email')

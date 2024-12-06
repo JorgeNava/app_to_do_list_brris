@@ -28,22 +28,17 @@ jobs:
           # Cambiar al directorio donde se desplegará la app
           cd ~/app_to_do_list || mkdir ~/app_to_do_list && cd ~/app_to_do_list
 
-          # Clonar el repositorio
           if [ ! -d ".git" ]; then
-            git clone https://github.com/<your-repo-url>.git .
+            git clone https://github.com/brissporras26/app_to_do_list.git .
           else
             git pull origin main
           fi
 
-          # Instalar dependencias
           python3 -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
 
-          # Exportar variables de entorno
           export $(cat .env | xargs)
 
-          # Correr la aplicación
-          nohup python run.py > app.log 2>&1 &
-EOF
+          nohup python run.py > app.log 2>&1 & EOF
