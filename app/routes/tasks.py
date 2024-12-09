@@ -1,3 +1,4 @@
+from flask import request, redirect, url_for
 from flask import Blueprint, redirect, request, jsonify, url_for, render_template
 from database.database_manager import database_manager
 from bson import ObjectId
@@ -5,7 +6,6 @@ import os
 from bson import ObjectId
 from app.logic.task_logic import add_task_logic
 from app.logic.task_logic import update_task
-
 
 
 task_bp = Blueprint('task', __name__)
@@ -30,25 +30,21 @@ def add_task():
 
     return redirect(url_for('home.home'))  # Redirige de vuelta a la página de inicio
 
-from flask import request, redirect, url_for
 
 @task_bp.route('/edit-task/<task_id>', methods=['POST'])
 def edit_task(task_id):
-  new_name = request.form.get('new_name')
-  new_priority = request.form.get('new_priority')
-  
-  print("[NAVA] task_id " + task_id)
-  print("[NAVA] new_name " + new_name)
-  print("[NAVA] new_priority " + new_priority)
-  
-  update_task(task_id, new_name, new_priority)
-  return redirect(url_for('home.home'))
+    new_name = request.form.get('new_name')
+    new_priority = request.form.get('new_priority')
+
+    update_task(task_id, new_name, new_priority)
+    return redirect(url_for('home.home'))
+
 
 @task_bp.route('/tasks-delete/<task_id>', methods=['POST'])
 def delete_task(task_id):
     if request.form.get('_method') == 'DELETE':
-        print(f"Request method: {request.method}")  
-        print(f"Task ID received: {task_id}")  
+        print(f"Request method: {request.method}")
+        print(f"Task ID received: {task_id}")
 
         try:
             # Convertir task_id a ObjectId

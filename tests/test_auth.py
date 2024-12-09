@@ -51,3 +51,11 @@ def test_user_login(client, mocker):
     # Verificar redirección a la página principal
     assert response.status_code == 302
     assert response.headers['Location'] == url_for('home', _external=True)
+
+def test_oauth_login(test_client, requests_mock):
+    mock_response = {"access_token": "mock_token", "user_info": {"id": "123", "name": "Test User"}}
+    requests_mock.post("https://oauth-provider.com/token", json=mock_response)
+
+    response = test_client.post("/login", json={"code": "mock_code"})
+    assert response.status_code == 200
+    assert "access_token" in response.json
