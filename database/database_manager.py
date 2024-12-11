@@ -1,6 +1,8 @@
 import os
 from pymongo.mongo_client import MongoClient
 from dotenv import load_dotenv
+from ssl import CERT_NONE
+import certifi
 
 # Cargar variables de entorno del archivo .env
 load_dotenv()
@@ -14,7 +16,7 @@ class DatabaseManager:
         """
         Constructor de la clase.
         """
-        self.client = MongoClient(os.getenv('MONGO_URI'))
+        self.client = MongoClient(os.getenv('MONGO_URI'), tlsCAFile=certifi.where(), serverSelectionTimeoutMS=5000)
         self.default_db_name = 'ToDo'  # Nombre de la base de datos predeterminada
 
     def get_db(self, db_name=None):

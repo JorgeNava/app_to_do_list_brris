@@ -13,12 +13,7 @@
         <nav>
             <ul>
                 <li><a href="{{ url_for('home.home') }}">Home</a></li>
-                {% if session.get('user') %}
-                    <li><a href="{{ url_for('user.logout') }}">Logout</a></li>
-                    <li>Welcome, {{ session['user']['name'] }}</li>
-                {% else %}
-                    <li><a href="{{ url_for('user.get_user') }}">Login</a></li>
-                {% endif %}
+                <li><a href="{{ url_for('user.get_user') }}">Login</a></li>
             </ul>
         </nav>
     </header>

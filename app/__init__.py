@@ -1,49 +1,46 @@
 from flask import Flask, request
+from werkzeug.middleware.proxy_fix import ProxyFix
 from dotenv import load_dotenv
-from authlib.integrations.flask_client import OAuth
 import os
+from authlib.integrations.flask_client import OAuth  # Add this import
 
-# Inicializa OAuth
+# Create OAuth object
 oauth = OAuth()
 
 def create_app():
-    # Crear instancia de Flask
     app = Flask(__name__)
 
-    # Cargar variables de entorno
     load_dotenv()
-
-    # Configuración existente
+    
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-
-    # Inicializar OAuth con la aplicación
+    
+    # Configure Auth0
     oauth.init_app(app)
-
-    # Configuración de Auth0
     oauth.register(
-        name='auth0',
-        client_id=os.getenv('AUTH0_CLIENT_ID'),
-        client_secret=os.getenv('AUTH0_CLIENT_SECRET'),
+        "auth0",
+        client_id=os.getenv("AUTH0_CLIENT_ID"),
+        client_secret=os.getenv("AUTH0_CLIENT_SECRET"),
         client_kwargs={
-            'scope': 'openid profile email',
+            "scope": "openid profile email",
+            "prompt": "login"
         },
-        server_metadata_url=f'https://{os.getenv("AUTH0_DOMAIN")}/.well-known/openid-configuration',
+        authorize_url=f'https://{os.getenv("AUTH0_DOMAIN")}/authorize',
+        access_token_url=f'https://{os.getenv("AUTH0_DOMAIN")}/oauth/token',
+        server_metadata_url=f'https://{os.getenv("AUTH0_DOMAIN")}/.well-known/openid-configuration'
     )
-
+    
     @app.before_request
     def before_request():
-        # Permitir sobrescribir métodos HTTP usando el campo _method
         if request.method == 'POST' and '_method' in request.form:
             request.method = request.form['_method'].upper()
-
-    # Importar y registrar blueprints
+    
+    # Importar y registrar rutas
     with app.app_context():
         from app.routes.home import home_bp
         from app.routes.user import user_bp
         from app.routes.tasks import task_bp
         from app.routes.index import index_bp
-
-        # Registrar blueprints
+        
         app.register_blueprint(home_bp)
         app.register_blueprint(user_bp)
         app.register_blueprint(task_bp)
