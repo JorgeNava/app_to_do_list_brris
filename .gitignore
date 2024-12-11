@@ -2,7 +2,7 @@
 venv/
 env/
 
-# Archivos de configuración del entorno
+# Archivos de configuración del entorno de ambiente
 .env
 
 # Compilaciones de Python
