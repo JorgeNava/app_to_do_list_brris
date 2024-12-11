@@ -23,7 +23,7 @@ jobs:
         python-version: "3.9"
 
     - name: Load environment variables from GitHub Secrets
-      env:  # Cargar secretos del ambiente dev
+      env:
         MONGO_URI: ${{ secrets.MONGO_URI }}
         DB_NAME: ${{ secrets.DB_NAME }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
