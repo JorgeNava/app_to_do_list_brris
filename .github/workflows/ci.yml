@@ -1,19 +1,8 @@
-name: CI Pipeline
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Check out code
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -26,6 +15,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Export environment variables
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+          AUTH0_CALLBACK_URL: ${{ secrets.AUTH0_CALLBACK_URL }}
+        run: |
+          echo "MONGO_URI=${MONGO_URI}" >> $GITHUB_ENV
+          echo "DB_NAME=${DB_NAME}" >> $GITHUB_ENV
+          echo "SECRET_KEY=${SECRET_KEY}" >> $GITHUB_ENV
+          echo "AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}" >> $GITHUB_ENV
+          echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}" >> $GITHUB_ENV
+          echo "AUTH0_DOMAIN=${AUTH0_DOMAIN}" >> $GITHUB_ENV
+          echo "AUTH0_CALLBACK_URL=${AUTH0_CALLBACK_URL}" >> $GITHUB_ENV
+
       - name: Debug environment variables
         run: |
           echo "MONGO_URI=${MONGO_URI}"
@@ -35,17 +42,8 @@ jobs:
           echo "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}"
           echo "AUTH0_DOMAIN=${AUTH0_DOMAIN}"
           echo "AUTH0_CALLBACK_URL=${AUTH0_CALLBACK_URL}"
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
-          AUTH0_CALLBACK_URL: ${{ secrets.AUTH0_CALLBACK_URL }}
 
-      - name: Run pytest
-        run: pytest --maxfail=5 --disable-warnings
+      - name: Run tests
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           DB_NAME: ${{ secrets.DB_NAME }}
@@ -54,3 +52,5 @@ jobs:
           AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
           AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
           AUTH0_CALLBACK_URL: ${{ secrets.AUTH0_CALLBACK_URL }}
+        run: |
+          pytest --maxfail=5 --disable-warnings
