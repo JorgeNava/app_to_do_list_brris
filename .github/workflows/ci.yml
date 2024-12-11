@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+env:
+  ENV: dev
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -19,8 +22,8 @@ jobs:
       with:
         python-version: "3.9"
 
-    - name: Export environment variables
-      env:
+    - name: Load environment variables from GitHub Secrets
+      env:  # Cargar secretos del ambiente dev
         MONGO_URI: ${{ secrets.MONGO_URI }}
         DB_NAME: ${{ secrets.DB_NAME }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
@@ -43,4 +46,4 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run Tests
-      run: pytest
+      run: pytest --maxfail=5 --disable-warnings
